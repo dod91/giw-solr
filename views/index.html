@@ -1,0 +1,151 @@
+<!doctype html>
+<html>
+  <head>
+    <title>SOLR Search engine</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+ <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css
+" rel="stylesheet" type="text/css">
+  </head>
+  
+
+  <body ng-app="x">
+
+    <div class="container" ng-controller="SearchController as searchController">
+      
+      <div class="row">
+
+        <div class="col-md-8 col-md-offset-2">
+
+          <div class="row">
+            <div class="col-md-12">
+              <h1><a href="/" style="color:black;text-decoration:none;">Instant Search Engine</a></h1>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-10">
+
+              <input 
+                type="text" 
+                class="form-control" 
+                id="text"
+                placeholder=""
+                ng-model="searchController.userQuery"
+                ng-change="searchController.search(0)"
+              >
+            </div>
+            <div class="col-md-2">
+              <button 
+                type="button"
+                ng-click="searchController.search(0)"  
+                class="btn btn-default">
+                  <span class="glyphicon glyphicon-search"></span> 
+                  Search
+              </button>
+             </div>
+
+            </div>
+          </div>
+            
+        </div>
+
+
+       <div class="row">
+
+          <div class="col-md-8 col-md-offset-2">
+            <div class="row" ng-repeat="result in searchController.results">
+              <div class="col-md-12" >
+                <a href="[[result.htmlUri]]" target="_blank">
+                  [[result.htmlTitle]]
+                </a>
+              </div>
+              <div class="col-md-6">
+                <label style="display:block;font-size:0.7em;">[[result.htmlUri | limitTo:60]]<label/>
+              </div>
+              <div class="col-md-6"></div>
+              <div class="col-md-12">
+                <p>[[result.htmlContent |limitTo: 100]]</p>
+              </div>
+            </div>
+          </div>
+
+
+
+          <div class="row" ng-show="searchController.numFound == 0">
+            <div class="col-md-8 col-md-offset-2">
+              Your search - [[searchController.userQuery]] - did not match any documents.
+            </div>
+          </div>
+
+ 
+            <div class="row" ng-show="searchController.results">
+             <div class="col-md-8 col-md-offset-2">
+                <nav class="text-center">
+                  <ul class="pagination">
+                    <li 
+                      ng-click="searchController.search(searchController.page-1)" 
+                      ng-show="searchController.page >= 1"
+                    >
+                      <a href="#">&laquo;</a>
+                    </li>
+                    <li
+                      ng-class="{active : (n === searchController.page)}"
+                      ng-repeat="n in searchController.pagArray"
+                    >
+                      <a ng-click="searchController.search(n)" href="#">
+                        [[n]]
+                      </a>
+                    </li>
+                    <li 
+                      ng-click="searchController.search(searchController.page+1)" 
+                      ng-show="searchController.page >= 1">
+                      <a href="#">&raquo;</a>
+                    </li>
+                  </ul>
+                </nav>      
+              </div>
+            </div>
+
+
+       <div class="row" style="margin-top:20px;" ng-show="searchController.userQuery">
+          <div class="col-md-8 col-md-offset-2">
+            Found [[searchController.numFound]] documents
+          </div>
+        </div>
+
+        <div class="row"  ng-show="searchController.userQuery">
+          <div ng-show="searchController.suggestions" class="col-md-8 col-md-offset-2">
+            <p ng-repeat="n in searchController.suggestions" style="margin-bottom:0px;">
+              Suggestion for [[n.key]] : 
+              <a
+                href="#"
+                ng-repeat="suggestion in n.sug" 
+                ng-click="searchController.changeModel(suggestion.word)">
+                                [[suggestion.word]] 
+              </a>
+
+            </p>
+
+          </div>
+          <div ng-hide="searchController.suggestions" class="col-md-8 col-md-offset-2">
+            <p>No suggestion available for [[searchController.userQuery]]</p>
+          </div>
+        </div>
+
+        </div>
+      </div>
+
+      <!-- NG CONTROLLER -->  
+	  	</div>
+    <!-- NG APP -->
+		</div>
+
+    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>
+    <script src="./javascripts/module.js"></script>
+    <script src="./javascripts/range.js"></script>
+    <script src="./javascripts/queryService.js"></script>
+    <script src="./javascripts/searchController.js"></script>
+  </body>
+
+</html>
