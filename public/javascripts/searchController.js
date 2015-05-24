@@ -52,7 +52,7 @@ function handleSuggestions(serverResponse) {
 
 function handleResults(serverResponse) {
 	serverResponse.response.docs.forEach(function (response) {
-
+		var responseId = response.id;
 		var title = response['html-title'];
 		var htmlUri = response['warc-target-uri'];
 		if (title) {
@@ -69,12 +69,18 @@ function handleResults(serverResponse) {
 		}
 
 		if (response['html-content'] && response['html-content'][0]) {
-			response.htmlContent = response['html-content'][0];
+			if (serverResponse.highlighting && serverResponse.highlighting[responseId] && serverResponse.highlighting[responseId]['html-content'] && serverResponse.highlighting[responseId]['html-content'][0]) {
+				response.htmlContent = serverResponse.highlighting[responseId]['html-content'][0];
+			} else {
+				response.htmlContent = response['html-content'][0];
+			}
 		} else {
 			response.htmlContent = 'No preview available';
 		}
 	});
 }
+
+
 
 function createPagination(page, totalPages) {
 	var start, stop;
@@ -99,6 +105,32 @@ function createPagination(page, totalPages) {
 SearchController.prototype.changeModel = function (value) {
 	this.userQuery = value;
 	this.search(0);
+};
+
+SearchController.prototype.speech = function () {
+	var _this = this;
+	this.isRecording = true;
+	var recognizer = new webkitSpeechRecognition();
+	recognizer.lang = "en";
+	recognizer.onresult = function (event) {
+		if (event.results.length > 0) {
+			var result = event.results[event.results.length - 1];
+			console.log(result);
+			if (result.isFinal) {
+				_this.isRecording = false;
+				_this.userQuery = result[0].transcript;
+				_this.changeModel(_this.userQuery);
+			}
+		}
+	};
+	recognizer.onerror = function (err) {
+		_this.isRecording = false;
+		if (err.error === 'not-allowed') {
+			alert('Please allow microphone access to use this feature');
+		}
+
+	}
+	recognizer.start();
 };
 
 app.controller('SearchController', ['queryService', SearchController]);

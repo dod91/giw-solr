@@ -5,25 +5,26 @@
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" type="text/css">
  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css
 " rel="stylesheet" type="text/css">
+ <link href="./stylesheets/style.css" rel="stylesheet" type="text/css">
   </head>
   
 
   <body ng-app="x">
-
+  
     <div class="container" ng-controller="SearchController as searchController">
-      
+
       <div class="row">
 
         <div class="col-md-8 col-md-offset-2">
 
           <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-12 text-center">
               <h1><a href="/" style="color:black;text-decoration:none;">Instant Search Engine</a></h1>
             </div>
           </div>
 
           <div class="row">
-            <div class="col-md-10">
+            <div class="col-md-12">
 
               <input 
                 type="text" 
@@ -33,18 +34,30 @@
                 ng-model="searchController.userQuery"
                 ng-change="searchController.search(0)"
               >
+              <i 
+                class="fa fa-microphone" 
+                ng-class="{red: searchController.isRecording }"
+                ng-click="searchController.speech()"
+                style="position:relative; left:96%; top:-26px; font-size:1.4em;"
+                data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom"
+                ></i>
+
             </div>
-            <div class="col-md-2">
+          </div>
+<!--
+          <div class="row">
+            <div class="col-md-12 text-center">
               <button 
                 type="button"
                 ng-click="searchController.search(0)"  
+                ng-hide="searchController.userQuery.length > 0"
                 class="btn btn-default">
-                  <span class="glyphicon glyphicon-search"></span> 
                   Search
+                  <span class="glyphicon glyphicon-search"></span> 
               </button>
-             </div>
-
             </div>
+          </div>
+-->
           </div>
             
         </div>
@@ -64,7 +77,7 @@
               </div>
               <div class="col-md-6"></div>
               <div class="col-md-12">
-                <p>[[result.htmlContent |limitTo: 100]]</p>
+                <p ng-bind-html-unsafe="result.htmlContent| limitTo:200"></p>
               </div>
             </div>
           </div>
@@ -141,6 +154,9 @@
 		</div>
 
     <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+    
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>
     <script src="./javascripts/module.js"></script>
     <script src="./javascripts/range.js"></script>
