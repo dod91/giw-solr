@@ -2,6 +2,7 @@
 
 ## Quick start
 Download the common crawl dataset (urls in ```import/files2import.txt```)
+
 Start Apache SOLR
 
 ```
