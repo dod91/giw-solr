@@ -6,7 +6,9 @@ Download the common crawl dataset (urls in ```import/files2import.txt```)
 Start Apache SOLR
 
 ```
-node import/import_queue.js
+cd import/
+npm install
+node import_queue.js
 ```
 
 Start the frontend server
