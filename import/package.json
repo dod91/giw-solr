@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "sanitize-html": "^1.7.0",
     "warc": "^1.0.1"
   }
 }
