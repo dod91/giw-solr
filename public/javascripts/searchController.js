@@ -56,8 +56,14 @@ function handleResults(serverResponse) {
 		var title = response['html-title'];
 		var htmlUri = response['warc-target-uri'];
 		if (title) {
-			response.htmlTitle = (response['html-title'] || '');
-			response.htmlTitle = response.htmlTitle[0].trim();
+			if (serverResponse.highlighting && serverResponse.highlighting[responseId] && serverResponse.highlighting[responseId]['html-title'] && serverResponse.highlighting[responseId]['html-title'][0]) {
+				response.htmlTitle = serverResponse.highlighting[responseId]['html-title'][0];
+			} else {
+				response.htmlTitle = (response['html-title'] || '');
+			}
+
+
+			response.htmlTitle = response.htmlTitle.trim();
 		} else {
 			response.htmlTitle = 'No title available';
 		}

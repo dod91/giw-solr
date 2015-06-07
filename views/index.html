@@ -6,7 +6,7 @@
  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css
 " rel="stylesheet" type="text/css">
  <link href="./stylesheets/style.css" rel="stylesheet" type="text/css">
-  </head>
+<link href='http://fonts.googleapis.com/css?family=Roboto:100' rel='stylesheet' type='text/css'>  </head>
   
 
   <body ng-app="x">
@@ -30,7 +30,7 @@
                 type="text" 
                 class="form-control" 
                 id="text"
-                placeholder=""
+                placeholder="Type something to begin search"
                 ng-model="searchController.userQuery"
                 ng-change="searchController.search(0)"
               >
@@ -44,6 +44,14 @@
 
             </div>
           </div>
+
+
+       <div class="row" ng-show="searchController.userQuery">
+          <div class="col-md-8 text-muted num-results">
+            Found [[searchController.numFound]] documents
+          </div>
+        </div>
+
 <!--
           <div class="row">
             <div class="col-md-12 text-center">
@@ -66,10 +74,13 @@
        <div class="row">
 
           <div class="col-md-8 col-md-offset-2">
-            <div class="row" ng-repeat="result in searchController.results">
+            <div class="row  result-row" ng-repeat="result in searchController.results">
               <div class="col-md-12" >
-                <a href="[[result.htmlUri]]" target="_blank">
-                  [[result.htmlTitle]]
+                <a 
+                  href="[[result.htmlUri]]" 
+                  class="result-link"
+                  target="_blank" 
+                  ng-bind-html="result.htmlTitle">
                 </a>
               </div>
               <div class="col-md-6">
@@ -84,14 +95,14 @@
 
 
 
-          <div class="row" ng-show="searchController.numFound == 0">
+          <div ng-show="searchController.numFound == 0">
             <div class="col-md-8 col-md-offset-2">
-              Your search - [[searchController.userQuery]] - did not match any documents.
+              <h4>Your search - [[searchController.userQuery]] - did not match any documents.</h4>
             </div>
           </div>
 
  
-            <div class="row" ng-show="searchController.results">
+            <div  ng-show="searchController.results">
              <div class="col-md-8 col-md-offset-2">
                 <nav class="text-center">
                   <ul class="pagination">
@@ -120,24 +131,28 @@
             </div>
 
 
-       <div class="row" style="margin-top:20px;" ng-show="searchController.userQuery">
-          <div class="col-md-8 col-md-offset-2">
-            Found [[searchController.numFound]] documents
-          </div>
-        </div>
-
-        <div class="row"  ng-show="searchController.userQuery">
+        <div ng-show="searchController.userQuery">
           <div ng-show="searchController.suggestions" class="col-md-8 col-md-offset-2">
-            <p ng-repeat="n in searchController.suggestions" style="margin-bottom:0px;">
-              Suggestion for [[n.key]] : 
-              <a
-                href="#"
-                ng-repeat="suggestion in n.sug" 
-                ng-click="searchController.changeModel(suggestion.word)">
-                                [[suggestion.word]] 
-              </a>
+            <hr>
+            <h4 class="text-muted" ng-repeat="n in searchController.suggestions" style="margin-bottom:0px;">
+              Searches related to [[n.key]]
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="row">
+                    <div class="col-md-6" ng-repeat="suggestion in n.sug" style="margin-top:10px">
+                      <a
+                      style="font-size:14px;"
+                      href="#"
+                      ng-click="searchController.changeModel(suggestion.word)">
+                                      [[suggestion.word]] 
+                    </a>
+                    </div>
 
-            </p>
+                  </div>
+                </div>
+              </div>
+
+            </h4>
 
           </div>
           <div ng-hide="searchController.suggestions" class="col-md-8 col-md-offset-2">
